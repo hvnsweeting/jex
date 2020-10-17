@@ -61,6 +61,14 @@ spec:
         - containerPort: 80' | jex
 ```
 
+```python
+========== WELCOME TO JEX ==========
+Access the data via name data
+data is a dict, with keys: ['apiVersion', 'kind', 'metadata', 'spec']
+>>> data['spec']
+{'replicas': 3, 'selector': {'matchLabels': {'app': 'nginx'}}, 'template': {'metadata': {'labels': {'app': 'nginx'}}, 'spec': {'containers': [{'name': 'nginx', 'image': 'nginx:1.14.2', 'ports': [{'containerPort': 80}]}]}}}
+```
+
 - Use `jex -w` to open data on your browser, open web console and access the data via `data`.
 
 ![Firefox](firefox.png)
