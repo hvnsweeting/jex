@@ -65,6 +65,8 @@ spec:
 
 ![Firefox](firefox.png)
 
+![Firefox DOM](dom.png)
+
 ## TODO
 - Test and fully support OSX.
 - Support more REPL.
