@@ -9,6 +9,10 @@ Whether it is Python/Hylang or ES6 on your favorite web browser developer tool.
 
 `pip install jex`
 
+## Features
+- Supports input JSON/YAML.
+- Support exploring via Web browser, python interpreter, hylang interpreter.
+
 ## Usage
 - Just pipe the jex after the command that outputs JSON/YAML.
 ```
@@ -33,10 +37,36 @@ dict_keys(['id', 'node_id', 'name', 'full_name', 'private', 'owner', 'html_url',
 ...
 ```
 
+```yaml
+$ echo 'apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80' | jex
+```
+
 - Use `jex -w` to open data on your browser, open web console and access the data via `data`.
 
 ## TODO
 - Test and fully support OSX.
+- Support more REPL.
+- Support Jid.
 
 # Authors
 - Viet Hung Nguyen <hvn@familug.org>
