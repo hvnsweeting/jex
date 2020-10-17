@@ -6,7 +6,7 @@ not your taste, use the language you already know to explore the data.
 Whether it is Python/Hylang or ES6 on your favorite web browser developer tool.
 
 - Fighting the bad practice of using online JSON pretifier/formatter, which is
-prone to leak credentials contained in JSON/YAML (e.g K8S secret output0.
+prone to leak credentials contained in JSON/YAML (e.g K8S secret output).
 
 ## Install
 
