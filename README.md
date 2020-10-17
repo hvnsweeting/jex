@@ -63,6 +63,8 @@ spec:
 
 - Use `jex -w` to open data on your browser, open web console and access the data via `data`.
 
+![Firefox](firefox.png)
+
 ## TODO
 - Test and fully support OSX.
 - Support more REPL.
