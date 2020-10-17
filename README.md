@@ -1,9 +1,12 @@
 # Jex - JSON/YAML interactive explorer
 
 ## Why?
-In a world that JSON/YAML config files take over the world and JQ is
+- In a world that JSON/YAML config files take over the world and JQ is
 not your taste, use the language you already know to explore the data.
 Whether it is Python/Hylang or ES6 on your favorite web browser developer tool.
+
+- Fighting the bad practice of using online JSON pretifier/formatter, which is
+prone to leak credentials contained in JSON/YAML (e.g K8S secret output0.
 
 ## Install
 
@@ -65,8 +68,14 @@ spec:
 ========== WELCOME TO JEX ==========
 Access the data via name data
 data is a dict, with keys: ['apiVersion', 'kind', 'metadata', 'spec']
->>> data['spec']
-{'replicas': 3, 'selector': {'matchLabels': {'app': 'nginx'}}, 'template': {'metadata': {'labels': {'app': 'nginx'}}, 'spec': {'containers': [{'name': 'nginx', 'image': 'nginx:1.14.2', 'ports': [{'containerPort': 80}]}]}}}
+>>> pprint(data['spec'])
+{'replicas': 3,
+ 'selector': {'matchLabels': {'app': 'nginx'}},
+ 'template': {'metadata': {'labels': {'app': 'nginx'}},
+              'spec': {'containers': [{'image': 'nginx:1.14.2',
+                                       'name': 'nginx',
+                                       'ports': [{'containerPort': 80}]}]}}}
+
 ```
 
 - Use `jex -w` to open data on your browser, open web console and access the data via `data`.
