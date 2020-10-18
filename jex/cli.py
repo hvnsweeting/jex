@@ -114,6 +114,13 @@ def open_in_webbrowser(fn):
         webbrowser.open_new_tab(fn)
 
 
+RUBY_PRELOAD = """
+require 'json'
+$data = JSON.parse(File.open('JSONPATH', 'r').read())
+puts("data of type %s, access via variable $data" % [$data.class])
+"""
+
+
 def main():
     argp = argparse.ArgumentParser()
     argp.add_argument(
@@ -125,54 +132,55 @@ def main():
     argp.add_argument(
         "--repl",
         help="TODO, would need preconvert data to each lang",
-        choices=["hy"],
+        choices=["hy", "rb"],
     )
     args = argp.parse_args()
     if args.webbrowser:
         fn = process()
         open_in_webbrowser(fn)
+        exit()
+
+    fn = process()
+    if args.repl == "hy":
+        with open("/tmp/jbox.hy", "wt") as f:
+            f.write(HYLANG_PRELOAD.replace("JSONPATH", fn + ".json"))
+        cmd = ["hy", "-i", "/tmp/jbox.hy"]
+    elif args.repl == "rb":
+        with open("/tmp/jbox.rb", "wt") as f:
+            f.write(RUBY_PRELOAD.replace("JSONPATH", fn + ".json"))
+        cmd = ["irb", "-r", "/tmp/jbox.rb"]
 
     else:
-        fn = process()
+        with open("/tmp/jbox.py", "wt") as f:
+            f.write(PYTHON_PRELOAD.replace("JSONPATH", fn + ".json"))
 
-        if args.repl == "hy":
-            with open("/tmp/jbox.hy", "wt") as f:
-                f.write(HYLANG_PRELOAD.replace("JSONPATH", fn + ".json"))
-            cmd = ["gnome-terminal", "--", "hy", "-i", "/tmp/jbox.hy"]
-        else:
-            with open("/tmp/jbox.py", "wt") as f:
-                f.write(PYTHON_PRELOAD.replace("JSONPATH", fn + ".json"))
+        cmd = [
+            sys.executable,
+            "-i",
+            "/tmp/jbox.py",
+        ]
 
-            # TODO detect terminal in use
-            # TODO run as shell exec instead of subprocess
-            cmd = [
-                "gnome-terminal",
-                "--",
-                sys.executable,
-                "-i",
-                "/tmp/jbox.py",
-            ]
+    # TODO detect terminal in use
+    # TODO run as shell exec instead of subprocess
+    cmd = ["gnome-terminal", "--"] + cmd
 
-            if sys.platform == "darwin":
-                with open("/tmp/jbox.sh", "wt") as f:
-                    f.write(
-                        OSX_INVOKER.replace(
-                            "PYTHON_INTERPRETER", sys.executable
-                        )
-                    )
-                os.chmod("/tmp/jbox.sh", 0o755)
-                try:
-                    cmd = ["open", "--new", "-a", "iterm", "/tmp/jbox.sh"]
-                    subprocess.call(cmd)
-                    exit()
-                except Exception:
-                    cmd = ["open", "--new", "-a", "Terminal", "/tmp/jbox.sh"]
+    if sys.platform == "darwin":
+        with open("/tmp/jbox.sh", "wt") as f:
+            f.write(OSX_INVOKER.replace("PYTHON_INTERPRETER", sys.executable))
+        os.chmod("/tmp/jbox.sh", 0o755)
         try:
+            cmd = ["open", "--new", "-a", "iterm", "/tmp/jbox.sh"]
             subprocess.call(cmd)
-        except Exception as e:
-            print("Cannot open terminal: {}, Error: {}".format(cmd, e))
-            print("fall-back to webbrowser.")
-            open_in_webbrowser(fn)
+            exit()
+        except Exception:
+            cmd = ["open", "--new", "-a", "Terminal", "/tmp/jbox.sh"]
+
+    try:
+        subprocess.call(cmd)
+    except Exception as e:
+        print("Cannot open terminal: {}, Error: {}".format(cmd, e))
+        print("fall-back to webbrowser.")
+        open_in_webbrowser(fn)
 
 
 if __name__ == "__main__":
