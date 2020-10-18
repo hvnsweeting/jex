@@ -85,7 +85,6 @@ data is a dict, with keys: ['apiVersion', 'kind', 'metadata', 'spec']
 ![Firefox DOM](dom.png)
 
 ## TODO
-- Test and fully support OSX.
 - Support more REPL.
 - Support Jid.
 

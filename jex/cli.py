@@ -1,6 +1,7 @@
 import argparse
 import json
 import tempfile
+import os
 import sys
 import subprocess
 import webbrowser
@@ -99,6 +100,11 @@ HYLANG_PRELOAD = """
     (print (.format "data is a list, with length {}, first elem of type {}" (len data) (type (first data)))))))
 """
 
+OSX_INVOKER = """
+#!/bin/sh
+exec PYTHON_INTERPRETER -i /tmp/jbox.py
+"""
+
 
 def open_in_webbrowser(fn):
     try:
@@ -136,6 +142,9 @@ def main():
         else:
             with open("/tmp/jbox.py", "wt") as f:
                 f.write(PYTHON_PRELOAD.replace("JSONPATH", fn + ".json"))
+
+            # TODO detect terminal in use
+            # TODO run as shell exec instead of subprocess
             cmd = [
                 "gnome-terminal",
                 "--",
@@ -144,8 +153,16 @@ def main():
                 "/tmp/jbox.py",
             ]
 
-        # TODO detect terminal in use
-        # TODO run as shell exec instead of subprocess
+            if sys.platform == "darwin":
+                with open("/tmp/jbox.sh", "wt") as f:
+                    f.write(
+                        OSX_INVOKER.replace(
+                            "PYTHON_INTERPRETER", sys.executable
+                        )
+                    )
+                os.chmod("/tmp/jbox.sh", 0o755)
+
+                cmd = ["open", "-a", "Terminal", "/tmp/jbox.sh"]
         try:
             subprocess.call(cmd)
         except Exception as e:
