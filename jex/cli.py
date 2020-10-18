@@ -161,8 +161,12 @@ def main():
                         )
                     )
                 os.chmod("/tmp/jbox.sh", 0o755)
-
-                cmd = ["open", "-a", "Terminal", "/tmp/jbox.sh"]
+                try:
+                    cmd = ["open", "--new", "-a", "iterm", "/tmp/jbox.sh"]
+                    subprocess.call(cmd)
+                    exit()
+                except Exception:
+                    cmd = ["open", "--new", "-a", "Terminal", "/tmp/jbox.sh"]
         try:
             subprocess.call(cmd)
         except Exception as e:
