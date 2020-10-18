@@ -14,7 +14,14 @@ prone to leak credentials contained in JSON/YAML (e.g K8S secret output).
 
 ## Features
 - Supports input JSON/YAML.
-- Support exploring via Web browser, python interpreter, hylang interpreter.
+
+### Explorers
+Supports exploring via
+- Python interpreter
+- Hylang interpreter `hy`
+- Interactive Ruby Shell `irb`
+- Node `node`
+- Web browser
 
 ## Usage
 - Just pipe the jex after the command that outputs JSON/YAML.
@@ -85,7 +92,6 @@ data is a dict, with keys: ['apiVersion', 'kind', 'metadata', 'spec']
 ![Firefox DOM](dom.png)
 
 ## TODO
-- Support more REPL.
 - Support Jid.
 
 # Authors

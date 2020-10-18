@@ -121,6 +121,16 @@ puts("data of type %s, access via variable $data" % [$data.class])
 """
 
 
+NODE_PRELOAD = """
+console.log("Using nodejs version: ", process.version);
+global.data = require("JSONPATH");
+console.log("Access via variable `data`, type: ", typeof(global.data));
+if (global.data instanceof Array) {
+  console.log("Length: ", global.data.length);
+}
+"""
+
+
 def main():
     argp = argparse.ArgumentParser()
     argp.add_argument(
@@ -132,7 +142,7 @@ def main():
     argp.add_argument(
         "--repl",
         help="TODO, would need preconvert data to each lang",
-        choices=["hy", "rb"],
+        choices=["hy", "rb", "node", "js"],
     )
     args = argp.parse_args()
     if args.webbrowser:
@@ -149,6 +159,10 @@ def main():
         with open("/tmp/jbox.rb", "wt") as f:
             f.write(RUBY_PRELOAD.replace("JSONPATH", fn + ".json"))
         cmd = ["irb", "-r", "/tmp/jbox.rb"]
+    elif args.repl in {"node", "js"}:
+        with open("/tmp/jbox.js", "wt") as f:
+            f.write(NODE_PRELOAD.replace("JSONPATH", fn + ".json"))
+        cmd = ["node", "-r", "/tmp/jbox.js"]
 
     else:
         with open("/tmp/jbox.py", "wt") as f:
