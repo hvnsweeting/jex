@@ -29,8 +29,18 @@ Supports exploring via
 $ curl -ssL https://api.github.com/users/hvnsweeting/repos | jex
 ```
 
-It would open a new window for interactive exploring the data via name `data` in Python interactive interpreter:
+- Use `jex -w` to open data on your browser, open web console and access the data via `data`.
+
+![Firefox](firefox.png)
+
+![Firefox DOM](dom.png)
+
+- Use `jex -i` to open simple python interpreter - in same process - useful on
+no GUI environment.
+
+- Use `jex` would open a new window for interactive exploring the data via name `data` in Python interactive interpreter:
 This pre-import `pprint`, all functions in `itertools`, `functools`, `operator` stdlib.
+Provide `--repl LANG` to invoke other language interpreters.
 
 ```python
 ========== WELCOME TO JEX ==========
@@ -84,12 +94,6 @@ data is a dict, with keys: ['apiVersion', 'kind', 'metadata', 'spec']
                                        'ports': [{'containerPort': 80}]}]}}}
 
 ```
-
-- Use `jex -w` to open data on your browser, open web console and access the data via `data`.
-
-![Firefox](firefox.png)
-
-![Firefox DOM](dom.png)
 
 ## TODO
 - Support Jid.

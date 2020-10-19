@@ -131,6 +131,34 @@ if (global.data instanceof Array) {
 """
 
 
+def create_interpreter(json_path):
+    import code
+
+    # TODO: these two does not work froms cript but work when type in interpreter
+    import rlcompleter  # noqa
+    import readline  # noqa
+
+    data = json.load(open(json_path))
+
+    print("{0} {1} {0}".format("=" * 10, "WELCOME TO JEX"))
+    print("Access the data via name data")
+    if isinstance(data, list):
+        if not data:
+            print("Empty list")
+        else:
+            print(
+                "data is a list, with length {}, first elem of type {}".format(
+                    len(data), type(data[0])
+                )
+            )
+    elif isinstance(data, dict):
+        print("data is a dict, with keys: {}".format(list(data.keys())))
+
+    sys.stdin = open("/dev/tty")
+    shell = code.InteractiveConsole(locals=locals())
+    shell.interact()
+
+
 def main():
     argp = argparse.ArgumentParser()
     argp.add_argument(
@@ -144,6 +172,12 @@ def main():
         help="TODO, would need preconvert data to each lang",
         choices=["hy", "rb", "node", "js"],
     )
+    argp.add_argument(
+        "-i",
+        "--inside",
+        help="Run in-process, do not open a terminal - suit for server no GUI",
+        action='store_true',
+    )
     args = argp.parse_args()
     if args.webbrowser:
         fn = process()
@@ -151,6 +185,10 @@ def main():
         exit()
 
     fn = process()
+    if args.inside:
+        create_interpreter(json_path=fn + ".json")
+        exit()
+
     if args.repl == "hy":
         with open("/tmp/jbox.hy", "wt") as f:
             f.write(HYLANG_PRELOAD.replace("JSONPATH", fn + ".json"))
@@ -191,8 +229,12 @@ def main():
 
     try:
         subprocess.call(cmd)
+    except FileNotFoundError as e:
+        print("Cannot open program: {}, Error: {} {}".format(cmd, type(e), e))
+        print("Fall-back to simple python interpreter")
+        create_interpreter(json_path=fn + ".json")
     except Exception as e:
-        print("Cannot open terminal: {}, Error: {}".format(cmd, e))
+        print("Cannot open terminal: {}, Error: {} {}".format(cmd, type(e), e))
         print("fall-back to webbrowser.")
         open_in_webbrowser(fn)
 
