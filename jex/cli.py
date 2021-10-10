@@ -68,15 +68,16 @@ def process():
 
 
 PYTHON_PRELOAD = """
-from pprint import pprint
 from itertools import *
 from functools import *
 from operator import *
+from pprint import pprint as pp  # noqa
 
 import json
 data = json.load(open("JSONPATH"))
 print("{0} {1} {0}".format("=" * 10, "WELCOME TO JEX"))
 print("Access the data via name data")
+print("Pretty print with pp(data)")
 if isinstance(data, list):
     if not data:
         print("Empty list")
